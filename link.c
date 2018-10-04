@@ -93,3 +93,21 @@ int remove_from_front(nodeptr *p)	{
     }
 
 }
+
+void rev(nodeptr *p){
+    nodeptr current;
+    nodeptr prev;
+    nodeptr next;
+    prev=NULL;
+    current=*p;
+    next=*p;
+    while(current!=NULL){
+        next=next->next;
+        current->next=prev;
+        prev = current;
+        current = next;
+    }
+    *p=prev;
+
+}
+
