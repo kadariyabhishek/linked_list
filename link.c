@@ -1,95 +1,161 @@
-
-/* 
-* C program to implement link list
-* Author:Abhishek Kadariya
-* Ref : Data Structure using c and c++, chapter 4, page no: 191
-*/
-
-#include<stdio.h>
-#include<stdlib.h>
-
-
-struct node{
-	int info;
-	struct node *next;
+#include <stdio.h>
+#include <stdlib.h>
+struct node {
+  int data;
+  struct node *next;
 };
 
-typedef struct node *nodeptr;
+struct node *start = NULL;
+void insert_at_begin(int);
+void insert_at_end(int);
+void traverse();
+void delete_from_begin();
+void delete_from_end();
+int count = 0;
 
-nodeptr getnode();
-void insert_at_front(nodeptr*,int);
-int remove_from_front(nodeptr*);
-void free_node(nodeptr);
-void display_list(nodeptr);
+int main () {
+  int i, data;
 
-int main(){
-	
-	nodeptr p;
-	p=NULL;
-	insert_at_front(&p,3);
-	insert_at_front(&p,6);
-	insert_at_front(&p,7);
-	insert_at_front(&p,8);
+  for (;;) {
+    printf("1. Insert an element at the beginning of linked list.\n");
+    printf("2. Insert an element at the end of linked list.\n");
+    printf("3. Traverse linked list.\n");
+   printf("4. Delete an element from beginning.\n");
+    printf("5. Delete an element from end.\n");
+   // printf("6. Exit\n");
 
+    scanf("%d", &i);
 
-    display_list(p);
-    printf("remove = %d\n",remove_from_front(&p));
-    printf("remove = %d\n",remove_from_front(&p));
-    printf("remove = %d\n",remove_from_front(&p));
-    printf("remove = %d\n",remove_from_front(&p));
-     printf("remove = %d\n",remove_from_front(&p));
-    display_list(p);
- 
-
-}
-
-
-nodeptr getnode(){
-	return (nodeptr)malloc(sizeof(nodeptr));
-}
-
-
-//function to free node 
-void free_node(nodeptr p){
-	free(p);
-}
-//function to insert at front
-void insert_at_front(nodeptr* p,int x){
-	nodeptr q;
-	q=getnode();
-	q->info=x;
-	q->next=*p;
-	*p=q;
-}
-//function to display the list
-void display_list(nodeptr p){
-	nodeptr ptr=p;
-	while(ptr!=NULL){
-		printf("%d",ptr->info);
-		ptr=ptr->next;
-	}
-	printf("\n");
-}
-
-//function to remove from front
-
-
-int remove_from_front(nodeptr *p)	{
-   if(*p==NULL)
-   {
-       printf("\nUnderflow\n"); 
-       exit(0);
-   }
-   else
-    
-    {
-        nodeptr q;
-        int x;
-        q=*p;
-        *p= q->next;
-        x=q->info;
-        return x;
-        freenode(q);
+    if (i == 1) {
+      printf("Enter value of element\n");
+      scanf("%d", &data);
+      insert_at_begin(data);
     }
+    else if (i == 2) {
+      printf("Enter value of element\n");
+      scanf("%d", &data);
+      insert_at_end(data);
+    }
+    else if (i == 3)
+      traverse();
+    else if (i == 4)
+      delete_from_begin();
+    else if (i == 5)
+      delete_from_end();
+    else if (i == 6)
+      break;
+    else
+      printf("Please enter valid input.\n");
+  }
 
+  return 0;
+}
+
+void insert_at_begin(int x) {
+  struct node *t;
+
+  t = (struct node*)malloc(sizeof(struct node));
+  t->data = x;
+  count++;
+
+  if (start == NULL) {
+    start = t;
+    start->next = NULL;
+    return;
+  }
+
+  t->next = start;
+  start = t;
+}
+
+void insert_at_end(int x) {
+  struct node *t, *temp;
+
+  t = (struct node*)malloc(sizeof(struct node));
+  t->data = x;
+  count++;
+
+  if (start == NULL) {
+    start = t;
+    start->next = NULL;
+    return;
+  }
+
+  temp = start;
+
+  while (temp->next != NULL)
+    temp = temp->next;
+
+  temp->next = t;
+  t->next   = NULL;
+}
+
+void traverse() {
+  struct node *t;
+
+  t = start;
+
+  if (t == NULL) {
+    printf("Linked list is empty.\n");
+    return;
+  }
+
+  printf("There are %d elements in linked list.\n", count);
+
+  while (t->next != NULL) {
+    printf("%d\n", t->data);
+    t = t->next;
+  }
+  printf("%d\n", t->data); // Print last node
+}
+
+void delete_from_begin() {
+  struct node *t;
+  int n;
+
+  if (start == NULL) {
+    printf("Linked list is empty.\n");
+    return;
+  }
+
+  n = start->data;
+  t = start->next;
+  free(start);
+  start = t;
+  count--;
+
+  printf("%d deleted from the beginning successfully.\n", n);
+}
+
+void delete_from_end() {
+  struct node *t, *u;
+  int n;
+
+  if (start == NULL) {
+    printf("Linked list is empty.\n");
+    return;
+  }
+
+  count--;
+
+  if (start->next == NULL) {
+    n = start->data;
+    free(start);
+    start = NULL;
+    printf("%d deleted from end successfully.\n", n);
+    return;
+  }
+
+  t = start;
+
+  while (t->next != NULL) {
+    u = t;
+    t = t->next;
+  }
+
+  n = t->data;
+  u->next = NULL;
+  free(t);
+
+  printf("%d deleted from end successfully.\n", n);
 }
